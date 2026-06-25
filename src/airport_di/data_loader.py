@@ -117,10 +117,52 @@ def load_synthetic_panel(
 
     Returns:
         ['region_code', 'period', 'treatment', 'post', 'outcome'] 컬럼
+
+    DGP (평행추세 만족):
+        outcome_it = unit_fe_i + common_trend_t + season_t
+                     + effect·(treat_i × post_t) + ε_it
+    처리는 period >= pre_periods 부터 적용된다.
     """
-    raise NotImplementedError(
-        "TODO: np.random.seed; 통제군 N개 베이스 trend + 처리군에 post 시점 +effect 추가"
+    import numpy as np
+
+    rng = np.random.default_rng(seed)
+    n_units = n_treated + n_control
+    total_periods = pre_periods + post_periods
+    periods = np.arange(total_periods)
+
+    # 공통 시간 추세 + 계절성 (처리·통제 동일 → 평행추세)
+    common_trend = 0.002 * periods
+    season = 0.01 * np.sin(2 * np.pi * periods / 12.0)
+
+    rows = []
+    for u in range(n_units):
+        is_treated = 1 if u < n_treated else 0
+        unit_fe = rng.normal(0.0, 0.1)         # 단위 고정효과
+        base = 5.0 + unit_fe                    # log 가격 수준 가정
+        noise = rng.normal(0.0, 0.02, total_periods)
+
+        post = (periods >= pre_periods).astype(int)
+        effect = treatment_effect * is_treated * post
+
+        outcome = base + common_trend + season + effect + noise
+
+        region_code = f"T{u:03d}" if is_treated else f"C{u:03d}"
+        for t in range(total_periods):
+            rows.append({
+                "region_code": region_code,
+                "period": int(periods[t]),
+                "treatment": is_treated,
+                "post": int(post[t]),
+                "outcome": float(outcome[t]),
+            })
+
+    df = pd.DataFrame(rows)
+    logger.info(
+        "합성 패널: 처리 %d · 통제 %d · 기간 %d (사전 %d/사후 %d), 효과=%.3f",
+        n_treated, n_control, total_periods, pre_periods, post_periods,
+        treatment_effect,
     )
+    return df
 
 
 def load_boundary_geo(case: CaseStudy) -> gpd.GeoDataFrame:
