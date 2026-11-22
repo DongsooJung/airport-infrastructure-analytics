@@ -26,7 +26,7 @@ Airport Infrastructure Difference-in-Differences Analytics
 
 __version__ = "0.1.0"
 __author__ = "Dongsoo Jung"
-__email__ = "jds068888.gmail.com"
+__email__ = "jds068888@gmail.com"
 
 from airport_di.did import DIDAnalysis  # noqa: F401
 from airport_di.data_loader import load_panel  # noqa: F401
