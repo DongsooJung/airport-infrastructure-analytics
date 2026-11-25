@@ -1,21 +1,22 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "airport-infrastructure-analytics"
+title: "airport-infrastructure-analytics: Data-driven analysis of military airport relocation and former-site redevelopment"
 abstract: >-
-  Quantitative analysis of military airport relocation and former-site redevelopment in South Korea, combining difference-in-differences estimation with hedonic and network analysis.
+  Analysis code for evaluating military airport relocation and former-site
+  redevelopment: buffer analysis, hedonic pricing, and
+  difference-in-differences causal inference for urban policy.
 type: software
 version: 0.1.0
-date-released: "2026-11-23"
+date-released: "2026-11-25"
 license: MIT
 repository-code: "https://github.com/DongsooJung/airport-infrastructure-analytics"
 keywords:
+  - causal inference
   - difference-in-differences
-  - causal-inference
   - infrastructure
-  - korea
-  - urban-policy
-  - pandas
-  - python
+  - urban policy
+  - Korea
+  - reproducibility
 authors:
   - family-names: Jung
     given-names: Dongsoo
